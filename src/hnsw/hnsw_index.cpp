@@ -566,12 +566,18 @@ bool HNSWIndex::MergeIndexes(IndexLock &state, BoundIndex &other_index) {
 void HNSWIndex::Vacuum(IndexLock &state) {
 }
 
-string HNSWIndex::VerifyAndToString(IndexLock &state, const bool only_verify) {
-	throw NotImplementedException("HNSWIndex::VerifyAndToString() not implemented");
+void HNSWIndex::Verify(IndexLock &l) {
+	// throw NotImplementedException("HNSWIndex::Verify() not implemented");
+}
+
+string HNSWIndex::ToString(IndexLock &l, bool display_ascii) {
+	// throw NotImplementedException("HNSWIndex::ToString() not implemented");
+	// it cannot return something empty
+	return "HNSWIndex::ToString() not implemented";
 }
 
 void HNSWIndex::VerifyAllocations(IndexLock &state) {
-	throw NotImplementedException("HNSWIndex::VerifyAllocations() not implemented");
+	//throw NotImplementedException("HNSWIndex::VerifyAllocations() not implemented");
 }
 
 //------------------------------------------------------------------------------
@@ -664,33 +670,5 @@ void HNSWIndex::VerifyBuffers(IndexLock &lock) {
 }
 
 
-//------------------------------------------------------------------------------
-// Register Index Type
-//------------------------------------------------------------------------------
-void HNSWModule::RegisterIndex(DatabaseInstance &db) {
-
-	IndexType index_type;
-
-	index_type.name = HNSWIndex::TYPE_NAME;
-	index_type.create_instance = [](CreateIndexInput &input) -> unique_ptr<BoundIndex> {
-		auto res = make_uniq<HNSWIndex>(input.name, input.constraint_type, input.column_ids, input.table_io_manager,
-		                                input.unbound_expressions, input.db, input.options, input.storage_info);
-		return std::move(res);
-	};
-	index_type.create_plan = HNSWIndex::CreatePlan;
-
-	// Register persistence option
-	db.config.AddExtensionOption("hnsw_enable_experimental_persistence",
-	                             "experimental: enable creating HNSW indexes in persistent databases",
-	                             LogicalType::BOOLEAN, Value::BOOLEAN(false));
-
-	// Register scan option
-	db.config.AddExtensionOption("hnsw_ef_search",
-	                             "experimental: override the ef_search parameter when scanning HNSW indexes",
-	                             LogicalType::BIGINT);
-
-	// Register the index type
-	db.config.GetIndexTypes().RegisterIndexType(index_type);
-}
 
 } // namespace duckdb

@@ -67,6 +67,7 @@ unique_ptr<GlobalSinkState> PhysicalCreateHNSWIndex::GetGlobalSinkState(ClientCo
 	auto &table_manager = TableIOManager::Get(storage);
 	auto &constraint_type = info->constraint_type;
 	auto &db = storage.db;
+
 	gstate->global_index =
 	    make_uniq<HNSWIndex>(info->index_name, constraint_type, storage_ids, table_manager, unbound_expressions, db,
 	                         info->options, IndexStorageInfo(), estimated_cardinality);

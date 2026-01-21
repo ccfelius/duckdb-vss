@@ -5,6 +5,7 @@ set(EXTENSION_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_index_physical_create.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_index_pragmas.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_index_scan.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_index_type.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_index_plan.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_topk_operator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/hnsw_optimize_expr.cpp
