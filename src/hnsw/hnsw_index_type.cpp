@@ -7,6 +7,9 @@
 
 namespace duckdb {
 
+//-------------------------------------------------------------
+// Binding
+//-------------------------------------------------------------
 
 unique_ptr<IndexBuildBindData> HNSWIndexBuildBind(IndexBuildBindInput &input) {
 	return nullptr;
@@ -79,7 +82,6 @@ unique_ptr<IndexBuildSinkState> HNSWInitSinkState(IndexBuildInitSinkInput &input
 
 
 void HNSWIndexBuildSink(IndexBuildSinkInput &state, DataChunk &key_chunk, DataChunk &row_chunk) {
-	// Create a Datachunk
 	DataChunk chunk;
 	chunk.InitializeEmpty({key_chunk.data[0].GetType(), row_chunk.data[0].GetType()});
 	chunk.data[0].Reference(key_chunk.data[0]);
@@ -96,7 +98,7 @@ void HNSWIndexBuildSink(IndexBuildSinkInput &state, DataChunk &key_chunk, DataCh
 //-------------------------------------------------------------
 // Combine
 //-------------------------------------------------------------
-// void (*index_build_sink_combine_t)(IndexBuildSinkCombineInput &input);
+
 void HNSWIndexBuildSinkCombine(IndexBuildSinkCombineInput &input) {
 	auto &lstate = input.local_state->Cast<HNSWIndexBuildSinkState>();
 	auto &gstate = input.global_state->Cast<HNSWIndexBuildState>();
@@ -241,15 +243,11 @@ void HNSWModule::RegisterIndex(DatabaseInstance &db) {
 
 	index_type.name = HNSWIndex::TYPE_NAME;
 
-	// we can possible remove this as well
 	index_type.create_instance = [](CreateIndexInput &input) -> unique_ptr<BoundIndex> {
 		auto res = make_uniq<HNSWIndex>(input.name, input.constraint_type, input.column_ids, input.table_io_manager,
 										input.unbound_expressions, input.db, input.options, input.storage_info);
 		return std::move(res);
 	};
-
-	// not necessary anymore
-	// index_type.create_plan = HNSWIndex::CreatePlan;
 
 	// Setup index creation callbacks!
 	index_type.build_bind = HNSWIndexBuildBind;
@@ -260,7 +258,6 @@ void HNSWModule::RegisterIndex(DatabaseInstance &db) {
 	index_type.build_prepare = HNSWIndexBuildPrepare;
 	index_type.build_work_init = HNSWInitWorkState;
 	index_type.build_work = HNSWIndexBuildWork;
-	// No build work combine?
 	index_type.build_finalize = HNSWFinalizeBuild;
 	index_type.build_sink_progress = HNSWIndexSinkProgress;
 
