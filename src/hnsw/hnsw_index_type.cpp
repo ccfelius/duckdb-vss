@@ -221,7 +221,7 @@ ProgressData HNSWIndexSinkProgress(IndexBuildProgressInput &input) {
 	// The "source_progress" is not relevant for CREATE INDEX statements
 	ProgressData res;
 
-	const auto &state = input.global_state->Cast<HNSWIndexBuildState>();
+	const auto &state = input.global_state.Cast<HNSWIndexBuildState>();
 	// First half of the progress is appending to the collection
 	if (!state.is_building) {
 		res.done = state.loaded_count + 0.0;
